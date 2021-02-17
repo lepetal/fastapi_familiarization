@@ -6,7 +6,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-  <!-- <form> -->
     <div class="form-group">
       <div class="input-group col-lg-12">
         <div class="input-group-prepend">
@@ -20,9 +19,7 @@
         <input class="form-control" id="third" type="text" placeholder="Result will be shown here…" readonly>
         <button id="submit" class="btn btn-primary">Calculate</button>
       </div>
-
     </div>
-<!-- </form> -->
 
 <script type="text/javascript">
   $( "#submit" ).click(function(e) {
@@ -31,8 +28,7 @@
      url: '/calc/',
      data: JSON.stringify({number1: $('#first').val(), number2: $('#second').val()}),
      type: 'POST',
-     // 'processData': false,
-     contentType: 'application/json', //typically 'application/x-www-form-urlencoded', but the service you are calling may expect 'text/json'... check with the service to see what they expect as content-type in the HTTP header.
+     contentType: 'application/json',
      success: function(data){
         $('#third').val(data.result);
       },
