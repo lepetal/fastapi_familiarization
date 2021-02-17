@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>Item Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <!-- <form> -->
+    <div class="form-group">
+      <div class="input-group col-lg-12">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">First number</span>
+        </div>
+        <input type="text" id="first" class="form-control" aria-label="First number" aria-describedby="inputGroup-sizing-default">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Second number</span>
+        </div>
+        <input type="text" id="second" class="form-control" aria-label="Second number" aria-describedby="inputGroup-sizing-default">
+        <input class="form-control" id="third" type="text" placeholder="Result will be shown here…" readonly>
+        <button id="submit" class="btn btn-primary">Calculate</button>
+      </div>
+
+    </div>
+<!-- </form> -->
+
+<script type="text/javascript">
+  $( "#submit" ).click(function(e) {
+    e.preventDefault();
+    $.ajax({
+     url: '/calc/',
+     data: JSON.stringify({number1: $('#first').val(), number2: $('#second').val()}),
+     type: 'POST',
+     // 'processData': false,
+     contentType: 'application/json', //typically 'application/x-www-form-urlencoded', but the service you are calling may expect 'text/json'... check with the service to see what they expect as content-type in the HTTP header.
+     success: function(data){
+        $('#third').val(data.result);
+      },
+      error: function(data, status, err) {
+        var errors = data.responseJSON;
+        $('#third').val(errors.detail[0].msg);
+      }
+    });
+  });
+
+  (function($) {
+    $.fn.inputFilter = function(inputFilter) {
+      return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+        if (inputFilter(this.value)) {
+          this.oldValue = this.value;
+          this.oldSelectionStart = this.selectionStart;
+          this.oldSelectionEnd = this.selectionEnd;
+        } else if (this.hasOwnProperty("oldValue")) {
+          this.value = this.oldValue;
+          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        } else {
+          this.value = "";
+        }
+      });
+    };
+  }(jQuery));
+
+  $("#first").inputFilter(function(value) {
+    return /^-?\d*$/.test(value); });
+
+  $("#second").inputFilter(function(value) {
+      return /^-?\d*$/.test(value); });
+
+</script>
+</body>
+</html>
